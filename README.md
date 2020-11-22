@@ -1,2 +1,11 @@
 # vue-ToDoApp
-This Todo App constructed with Vue. Separated from api.
+
+### Getting Started
+
+WIP
+
+
+### How to Contribute
+
+See [CONTRIBUTING.md](https://github.com/Yu0614/vue-ToDoApp/blob/main/CONTRIBUTING.md) before your contributing.
+
