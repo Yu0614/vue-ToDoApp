@@ -4,6 +4,7 @@
     <button
       type="button"
       name="back button"
+      @click="backToLists()"
       class="flex-none text-1xl text-red-600 bold ml-2">
       &lt; {{ backButtonName }}
     </button>
@@ -15,6 +16,7 @@
     <button
       type="button"
       name="edit button"
+      @click="editTodo()"
       class="flex-none text-1xl text-red-600 ml-20 mr-2">
       編集
     </button>
@@ -34,5 +36,19 @@ export default defineComponent({
             required: true
         },
     },
+    methods:{
+        /**
+         * ToDoListへ遷移します。
+         */
+        backToLists(){
+            this.$router.push('/list');
+        },
+        /**
+         * ToDoを編集します。
+         */
+        editTodo(){
+            this.$router.push('/edit');
+        }
+    }
 });
 </script>
