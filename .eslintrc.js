@@ -47,7 +47,7 @@ module.exports = {
     "semi-spacing": ["error", {"after": true, "before": false}],
 
     // line length
-    "max-len": ["error", {"code": 120, "ignoreUrls": true}],
+    "max-len": ["error", {"code": 180, "ignoreUrls": true}],
 
     // indent
     "indent": ["error", 4],
