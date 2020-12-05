@@ -83,9 +83,7 @@ export default defineComponent({
         Textarea,
         AddHeader,
     },
-    setup(props) {
-        console.log('props: ', props);
-
+    setup() {
         const input = reactive<{
             startDate: string; // カレンダー初期値(開始時間)
             endDate: string; // カレンダー初期値(終了時間)
@@ -102,6 +100,9 @@ export default defineComponent({
             memo: '',
         });
 
+        /**
+         * カレンダーで使用するデータ群
+         */
         const setting = reactive<{
             ja: {
                 firstDayOfWeek: number;
@@ -140,9 +141,11 @@ export default defineComponent({
         }
 
         return {
+
             // data
             input,
             setting,
+
             // funcitions
             validateTimeRange,
         };

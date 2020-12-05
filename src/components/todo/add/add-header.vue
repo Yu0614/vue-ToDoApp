@@ -26,6 +26,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
+
 export default defineComponent({
     name: 'AddHeader',
     props: {
@@ -49,12 +51,14 @@ export default defineComponent({
             memo: string;
         }
     }){
-        
+        // for routing
+        const router = useRouter();
+
         /**
          * ToDoListへ遷移します。
          */
         function cancel() :void {
-            this.$router.push('/list');
+            router.push('/list');
         }
 
         /**
