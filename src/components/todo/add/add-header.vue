@@ -1,3 +1,5 @@
+
+
 <template>
   <!-- header -->
   <div class="flex todo-header bg-gray-800 h-8 justify-between">
@@ -27,8 +29,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { EndPoints, HeaderInfo } from '../../../service/add/todos.service';
 
 export default defineComponent({
+    /* eslint-disable @typescript-eslint/camelcase */
     name: 'AddHeader',
     props: {
         backButtonName: {
@@ -51,6 +56,7 @@ export default defineComponent({
             memo: string;
         }
     }){
+
         // for routing
         const router = useRouter();
 
@@ -70,8 +76,24 @@ export default defineComponent({
                 return;
             }
 
-            // const targetTodo = 1;
-            // this.$router.push(`/todo/${targetTodo}`);
+            const request = {
+                user_id: 35, // 後で変更する
+                title: props.data.title,
+                place: props.data.place,
+                url: props.data.url,
+                memo: props.data.memo,
+                // 'start_date': props.data.startDate,
+                // 'end_date': props.data.endDate,
+            };
+            
+            // post 処理
+            axios.post(EndPoints.todos, request, {
+                headers: HeaderInfo.defaultHeaders}).then( (response: {data: {id: number}}) => {
+                router.push(`/todo/${response.data.id}`);
+            }).catch( () => {
+                window.alert('正常に追加できませんでした。後で再度お試しください。');
+            });
+            
         }
 
         return {
