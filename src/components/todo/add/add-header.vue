@@ -108,7 +108,7 @@ export default defineComponent({
             }
 
             const request = {
-                user_id: 35, // 後で変更する
+                user_id: 1, // 後で変更する
                 title: props.data.title,
                 place: props.data.place,
                 url: props.data.url,
