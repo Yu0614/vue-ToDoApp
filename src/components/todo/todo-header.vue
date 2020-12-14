@@ -6,11 +6,11 @@
       name="back button"
       @click="backToLists()"
       class="flex-none text-1xl text-red-600 bold ml-2">
-      &lt; {{ backButtonName }}
+      &lt; 戻る
     </button>
     <!-- header title -->
     <p class="flex-grow black text-center text-xl text-gray-50">
-      イベントの詳細
+      Todo
     </p>
     <!-- header title -->
     <button
@@ -27,28 +27,35 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
+
 export default defineComponent({
     name: 'ToDoHeader',
-    props: {
-        backButtonName: {
-            type: String,
-            default: '',
-            required: true
-        },
-    },
     methods:{
+        
+    },
+    setup() {
+        
+        const router = useRouter();
+
         /**
          * ToDoListへ遷移します。
          */
-        backToLists(){
-            this.$router.push('/list');
-        },
+        function backToLists() {
+            router.push('/list');
+        }
+
         /**
          * ToDoを編集します。
          */
-        editTodo(){
-            this.$router.push('/edit');
+        function editTodo(){
+            router.push('/edit');
         }
+
+        return {
+            backToLists,
+            editTodo,
+        };
     }
 });
 </script>
