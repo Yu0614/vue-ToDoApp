@@ -3,7 +3,8 @@
  * エンドポイントの一覧です。
  */
 export const EndPoints = {
-    todos: 'http://localhost:8000/todos'
+    todos: 'http://localhost:8000/todos',
+    todo: 'http://localhost:8000/todo'
 };
 
 /**
