@@ -49,7 +49,7 @@
     <!-- メモ -->
     <div 
       v-if="input.todo?.memo"
-      class="text-white text-xl ml-6 mt-3 border-t border-b border-gray-400 pt-3 pb-3">
+      class="text-white text-xl ml-6 mt-3 border-t border-b border-gray-400 pt-3 pb-3 md:break-words">
       メモ
       <br>
       <p class="text-gray-400">
@@ -57,6 +57,16 @@
       </p>
     </div>
     <!-- メモ -->
+    <div>
+      <p
+        class="text-red-500 text-xl ml-6 hover:bg-gray-500 text-center">
+        <button
+          @click="deleteTodo(input.todo?.id)"
+          class="w-full pt-3 pb-3">
+          削除
+        </button>
+      </p>
+    </div>
   </div>
   <!-- contents -->
 </template>
@@ -172,6 +182,13 @@ export default defineComponent({
             return `${year}年${month}月${days}日 ${day}曜日`;
         }
 
+        //
+        // apis
+        //
+
+
+        // get
+
         /**
          * user_id に対応した todoを全件取得します。
          *  L 取得し終わると todo のリストを表示します。
@@ -180,11 +197,32 @@ export default defineComponent({
             initialize();
             const url = `${EndPoints.todo}/${route.params.id}`;
             axios.get(url).then((response) => {
+                if (response.data === null) {
+                    router.push('/list');
+                }
                 input.todo = response.data as TodoList;
                 meta.loading = false;
             }).catch( () => {
                 window.alert('正常に追加できませんでした。後で再度お試しください。');
             });
+        }
+
+        // delete
+
+        /**
+         * user_id に対応した todoを全件取得します。
+         *  L 取得し終わると todo のリストを表示します。
+         */
+        function deleteTodo(id: number) : void {
+            const result :boolean = window.confirm('このTodoを削除します。よろしいでしょうか？');
+            if (result) {
+                const url = `${EndPoints.todo}/${id}`;
+                axios.delete(url).then((response) => {
+                    router.push('/list');
+                }).catch( () => {
+                    window.alert('正常に追加できませんでした。後で再度お試しください。');
+                });
+            }
         }
 
         getTodo(); // call api
@@ -195,7 +233,8 @@ export default defineComponent({
             meta,
             getTodo,
             getTimeRange,
-            getStandardDisplayTimes
+            getStandardDisplayTimes,
+            deleteTodo
         };
     }
 });

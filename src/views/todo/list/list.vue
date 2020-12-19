@@ -26,7 +26,8 @@
     v-if="meta.loading"
     src="@/assets/loading.gif" 
     alt="loading"
-    class="h-10 w-10 ml-44">
+    class="h-10 w-10 mt-5"
+    style="margin-left: 48vw;">
   <!-- loading -->
 </template>
 
@@ -34,7 +35,7 @@
 import { defineComponent,reactive } from 'vue';
 import ListHeader from '@/components/todo/list/list-header.vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { EndPoints } from '../../../service/add/todos.service';
 
 
@@ -105,7 +106,14 @@ export default defineComponent({
          */
         function getLists () : void {
             const url = `${EndPoints.todos}/?user_id=${dummyUserId}`;
-            axios.get(url).then((response) => {
+            const requestConfig: AxiosRequestConfig = {
+                headers :{
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache',
+                    'Expires': '0',
+                }
+            };
+            axios.get(url,requestConfig).then((response) => {
                 input.todos = response.data;
                 meta.loading = false;
             }).catch( () => {
