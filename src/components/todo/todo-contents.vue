@@ -67,7 +67,7 @@ import { defineComponent,reactive } from 'vue';
 import axios from 'axios';
 import { EndPoints } from '../../service/add/todos.service';
 import { useRoute, useRouter } from 'vue-router';
-import router from '../../router/index';
+
 
 export default defineComponent({
     name: 'ToDoContents',
@@ -159,7 +159,7 @@ export default defineComponent({
         /**
          * YYYY年MM月DD日 XX曜日 のフォーマットで返します。
          */
-        function getStandardDisplayTimes(data: TodoList | null) : string {
+        function getStandardDisplayTimes(data: Date | null) : string {
             if (data === null) {
                 return '';
             }
