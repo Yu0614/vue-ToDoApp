@@ -35,17 +35,6 @@ import { EndPoints, HeaderInfo } from '../../../service/add/todos.service';
 export default defineComponent({
     /* eslint-disable @typescript-eslint/camelcase */
     name: 'AddHeader',
-    props: {
-        backButtonName: {
-            type: String,
-            default: '',
-            required: true,
-        },
-        data: {
-            default: null,
-            type: null,
-        },
-    },
     setup(props: { 
         data: {
             startDate: string; 
