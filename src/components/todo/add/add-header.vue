@@ -31,19 +31,19 @@ import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { EndPoints, HeaderInfo } from '../../../service/add/todos.service';
+import { TodoList } from '@/components/interface/todoList';
 
 export default defineComponent({
     /* eslint-disable @typescript-eslint/camelcase */
     name: 'AddHeader',
-    setup(props: { 
+    props: {
         data: {
-            startDate: string; 
-            endDate: string; 
-            place: string;
-            title: string;
-            url: string;
-            memo: string;
-        }
+            default: null,
+            type: null,
+        },
+    },
+    setup(props: { 
+        data: TodoList
     }){
 
         // for routing
@@ -70,7 +70,7 @@ export default defineComponent({
         /**
          * 日付を投稿用に整形して返します。
          */
-        function processDate(date:string) :string | null {
+        function processDate(date:string | number | Date | undefined) :string | null {
             if (date === '' || date === undefined || date === null) {
                 return null;
             }
@@ -102,8 +102,8 @@ export default defineComponent({
                 place: props.data.place,
                 url: props.data.url,
                 memo: props.data.memo,
-                start_date: processDate(props.data.startDate),
-                end_date: processDate(props.data.endDate),
+                start_date: processDate(props.data.start_date),
+                end_date: processDate(props.data.end_date),
             };
             
             // post 処理

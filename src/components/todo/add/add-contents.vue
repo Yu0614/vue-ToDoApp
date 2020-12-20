@@ -27,7 +27,7 @@
         <Calendar
           required
           class=""
-          v-model="input.startDate"
+          v-model="input.start_date"
           placeholder="開始"
           :locale="setting.ja"
           :show-time="true"
@@ -37,7 +37,7 @@
           hour-format="24" />
         <Calendar
           class=""
-          v-model="input.endDate"
+          v-model="input.end_date"
           placeholder="終了"
           :locale="setting.ja"
           :show-time="true"
@@ -45,7 +45,7 @@
           :show-button-bar="true"
           date-format="yy年 mm月dd日"
           hour-format="24"
-          @date-select="validateTimeRange" />
+          @date-select="validateTimeRange(input.start_date, input.end_date)" />
       </div>
       <!-- timeRange -->
 
@@ -75,8 +75,10 @@ import { defineComponent, reactive } from 'vue/';
 import AddHeader from '@/components/todo/add/add-header.vue';
 import Calendar from 'primevue/calendar';
 import Textarea from 'primevue/textarea';
+import { TodoList } from '@/components/interface/todoList';
 
 export default defineComponent({
+    /* eslint-disable @typescript-eslint/camelcase */
     name: 'AddContents',
     components: {
         Calendar,
@@ -84,16 +86,9 @@ export default defineComponent({
         AddHeader,
     },
     setup() {
-        const input = reactive<{
-            startDate: string; // カレンダー初期値(開始時間)
-            endDate: string; // カレンダー初期値(終了時間)
-            place: string;
-            title: string;
-            url: string;
-            memo: string;
-        }>({
-            startDate: '', 
-            endDate: '',
+        const input = reactive<TodoList>({
+            start_date: '', 
+            end_date: '',
             place: '',
             title: '',
             url: '',
@@ -132,11 +127,11 @@ export default defineComponent({
         /**
          * 開始時間と終了時間を比較し、終了時間が開始時間より前に設定された場合は警告を出します。
          */
-        function validateTimeRange(): void {
-            const start = new Date(input.startDate).getTime();
-            const end = new Date(input.endDate).getTime();
+        function validateTimeRange(s: Date, e: Date): void {
+            const start = new Date(s).getTime();
+            const end = new Date(e).getTime();
             if (start > end) {
-                window.alert(`終了時間は開始時間より後に設定してください！\n開始時間: ${input.startDate}`);
+                window.alert(`終了時間は開始時間より後に設定してください！\n開始時間: ${input.start_date}`);
             }
         }
 
