@@ -9,7 +9,7 @@
       &lt; 戻る
     </button>
     <!-- header title -->
-    <p class="flex-grow black text-center text-xl text-gray-50">
+    <p class="flex-grow black text-center text-xl text-gray-50 pl-20">
       Todo
     </p>
     <!-- header title -->
@@ -27,7 +27,7 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
 
 export default defineComponent({
     name: 'ToDoHeader',
@@ -37,6 +37,7 @@ export default defineComponent({
     setup() {
         
         const router = useRouter();
+        const route = useRoute();
 
         /**
          * ToDoListへ遷移します。
@@ -49,7 +50,8 @@ export default defineComponent({
          * ToDoを編集します。
          */
         function editTodo(){
-            router.push('/edit');
+            const id = route.params.id;
+            router.push(`/edit/todo/${id}`);
         }
 
         return {

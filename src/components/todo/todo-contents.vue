@@ -217,7 +217,7 @@ export default defineComponent({
             const result :boolean = window.confirm('このTodoを削除します。よろしいでしょうか？');
             if (result) {
                 const url = `${EndPoints.todo}/${id}`;
-                axios.delete(url).then((response) => {
+                axios.delete(url).then(() => {
                     router.push('/list');
                 }).catch( () => {
                     window.alert('正常に追加できませんでした。後で再度お試しください。');

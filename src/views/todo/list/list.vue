@@ -37,6 +37,7 @@ import ListHeader from '@/components/todo/list/list-header.vue';
 import { useRouter } from 'vue-router';
 import axios, { AxiosRequestConfig } from 'axios';
 import { EndPoints } from '../../../service/add/todos.service';
+import { TodoList } from '@/components/interface/todoList';
 
 
 export default defineComponent({
@@ -45,16 +46,6 @@ export default defineComponent({
         ListHeader
     },
     setup() {
-        interface TodoList {
-            id: number;
-            userId :number;
-            title :string;
-            place? :string;
-            url? :string;
-            memo? :string;
-            start_date? :string;
-            end_date? :string;
-        }
     
         const input = reactive<{
             todos: TodoList[],

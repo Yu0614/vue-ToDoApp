@@ -12,15 +12,15 @@
     </button>
     <!-- header title -->
     <p class="flex-grow black text-center text-xl text-gray-50">
-      新規イベント
+      編集
     </p>
     <!-- header title -->
     <button
       type="button"
       name="edit"
-      @click="add()"
+      @click="update()"
       class="flex-none text-1xl text-red-600 ml-20 mr-2">
-      追加
+      更新
     </button>
   </div>
   <!-- header -->
@@ -28,14 +28,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 import { EndPoints, HeaderInfo } from '../../../service/add/todos.service';
 import { TodoList } from '@/components/interface/todoList';
 
 export default defineComponent({
     /* eslint-disable @typescript-eslint/camelcase */
-    name: 'AddHeader',
+    name: 'EditHeader',
     props: {
         data: {
             default: null,
@@ -43,17 +43,21 @@ export default defineComponent({
         },
     },
     setup(props: { 
-        data: TodoList
+        data: {
+            todo: TodoList
+        }
     }){
-
+        
         // for routing
         const router = useRouter();
+        const route = useRoute();
 
         /**
          * ToDoListへ遷移します。
          */
         function cancel() :void {
-            router.push('/list');
+            const id = route.params.id;
+            router.push(`/todo/${id}`);
         }
 
         /**
@@ -90,34 +94,39 @@ export default defineComponent({
         /**
          * ToDoを編集追加します。追加が正常に完了した場合は 追加されたToDoに遷移します。
          */
-        function add() :void {
-            if (props.data.title === '') {
+        function update() :void {
+            
+            if (props.data.todo.title === '') {
                 window.alert('タイトルが未入力です。入力してください。');
                 return;
             }
 
             const request = {
+                id: route.params.id,
                 user_id: 1, // 後で変更する
-                title: props.data.title,
-                place: props.data.place,
-                url: props.data.url,
-                memo: props.data.memo,
-                start_date: processDate(props.data.start_date),
-                end_date: processDate(props.data.end_date),
+                title: props.data.todo.title,
+                place: props.data.todo.place,
+                url: props.data.todo.url,
+                memo: props.data.todo.memo,
+                start_date: processDate(props.data.todo.start_date),
+                end_date: processDate(props.data.todo.end_date),
             };
             
-            // post 処理
-            axios.post(EndPoints.todos, request, {
-                headers: HeaderInfo.defaultHeaders}).then( (response: {data: {id: number}}) => {
-                router.push(`/todo/${response.data.id}`);
+
+            const url = `${EndPoints.todo}/${route.params.id}`;
+            
+            // put 処理
+            axios.put(url, request, {
+                headers: HeaderInfo.defaultHeaders}).then(() => {
+                router.push(`/todo/${route.params.id}`);
             }).catch( () => {
-                window.alert('正常に追加できませんでした。後で再度お試しください。');
+                window.alert('正常に更新できませんでした。後で再度お試しください。');
             });
             
         }
 
         return {
-            add,
+            update,
             cancel
         };
     },

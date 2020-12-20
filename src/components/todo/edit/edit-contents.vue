@@ -1,5 +1,5 @@
 <template>
-  <add-header
+  <edit-header
     :data="input" />
   <!-- contents -->
   <div class="contents flex flex-col">
@@ -9,13 +9,13 @@
         <input
           required
           name="title"
-          v-model="input.title"
+          v-model="input.todo.title"
           placeholder="タイトル"
           class="bg-gray-800 pl-3 text-gray-50 text-xl h-10"
           type="text" />
         <input
           name="place"
-          v-model="input.place"
+          v-model="input.todo.place"
           placeholder="場所"
           class="bg-gray-800 pl-3 text-gray-50 text-xl h-10"
           type="text" />
@@ -27,7 +27,7 @@
         <Calendar
           required
           class=""
-          v-model="input.start_date"
+          v-model="input.todo.start_date"
           placeholder="開始"
           :locale="setting.ja"
           :show-time="true"
@@ -37,7 +37,7 @@
           hour-format="24" />
         <Calendar
           class=""
-          v-model="input.end_date"
+          v-model="input.todo.end_date"
           placeholder="終了"
           :locale="setting.ja"
           :show-time="true"
@@ -45,7 +45,7 @@
           :show-button-bar="true"
           date-format="yy年 mm月dd日"
           hour-format="24"
-          @date-select="validateTimeRange(input.start_date, input.end_date)" />
+          @date-select="validateTimeRange(input.todo.start_date, input.todo.end_date)" />
       </div>
       <!-- timeRange -->
 
@@ -53,13 +53,13 @@
       <div class="flex flex-col border border-gray-500 divide-y divide-gray-700 mt-6">
         <input
           name="URL"
-          v-model="input.url"
+          v-model="input.todo.url"
           placeholder="URL"
           class="bg-gray-800 pl-3 text-gray-50 text-xl h-10"
           type="url" />
         <Textarea
           class="pl-3 text-gray-50 text-xl border"
-          v-model="input.memo"
+          v-model="input.todo.memo"
           placeholder="メモ"
           rows="5"
           cols="30" />
@@ -72,27 +72,39 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue/';
-import AddHeader from '@/components/todo/add/add-header.vue';
+import EditHeader from '@/components/todo/edit/edit-header.vue';
 import Calendar from 'primevue/calendar';
 import Textarea from 'primevue/textarea';
 import { TodoList } from '@/components/interface/todoList';
+import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
+import { EndPoints } from '../../../service/add/todos.service';
 
 export default defineComponent({
     /* eslint-disable @typescript-eslint/camelcase */
-    name: 'AddContents',
+    name: 'EditContents',
     components: {
         Calendar,
         Textarea,
-        AddHeader,
+        EditHeader,
     },
     setup() {
-        const input = reactive<TodoList>({
-            start_date: '', 
-            end_date: '',
-            place: '',
-            title: '',
-            url: '',
-            memo: '',
+        const input = reactive<{todo:TodoList}>({
+            todo: {
+                title: '',
+                url: '',
+                place: '',
+                memo: '',
+                start_date: '',
+                end_date: ''
+            }
+        });
+
+        // 画面表示の管理用
+        const meta = reactive<{
+            loading: boolean,
+        }>({
+            loading: true
         });
 
         /**
@@ -124,6 +136,22 @@ export default defineComponent({
             },
         });
 
+        // query params を取得
+        const route = useRoute();
+        const router = useRouter();
+
+        /**
+         * query params が 数字かどうか判定し、数字以外なら適切なページへ遷移させます。
+         */
+        function initialize() : void {
+            const id = Number(route.params.id);
+            if (isNaN(id)) {
+                router.push('/list');
+            }
+            return;
+        }
+
+
         /**
          * 開始時間と終了時間を比較し、終了時間が開始時間より前に設定された場合は警告を出します。
          */
@@ -131,18 +159,48 @@ export default defineComponent({
             const start = new Date(s).getTime();
             const end = new Date(e).getTime();
             if (start > end) {
-                window.alert(`終了時間は開始時間より後に設定してください！\n開始時間: ${input.start_date}`);
+                window.alert(`終了時間は開始時間より後に設定してください！\n開始時間: ${input.todo.start_date}`);
             }
         }
+
+        //
+        // apis
+        //
+
+
+        // get
+
+        /**
+         * user_id に対応した todoを全件取得します。
+         *  L 取得し終わると todo のリストを表示します。
+         */
+        function getTodo() : void {
+            initialize();
+            const url = `${EndPoints.todo}/${route.params.id}`;
+            axios.get(url).then((response) => {
+                if (response.data === null) {
+                    router.push('/list');
+                }
+                input.todo = response.data as TodoList;
+                meta.loading = false;
+            }).catch( () => {
+                window.alert('正常に追加できませんでした。後で再度お試しください。');
+            });
+        }
+
+        getTodo(); // call api
 
         return {
 
             // data
             input,
             setting,
+            meta,
 
-            // funcitions
+            // functions
             validateTimeRange,
+            initialize,
+            getTodo
         };
     },
 });

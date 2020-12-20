@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
         component: Add
     },
     {
-        path: '/edit',
+        path: '/edit/todo/:id',
         name: 'Edit',
         component: Edit
     },
